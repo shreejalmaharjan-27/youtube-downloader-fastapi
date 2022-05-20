@@ -9,7 +9,7 @@ def isAV(s):
 
 def getInfo(url):
 
-    with youtube_dl.YoutubeDL({'format':'137'}) as ydl:
+    with youtube_dl.YoutubeDL() as ydl:
 
         try:
             info = ydl.extract_info(url, download = False)
