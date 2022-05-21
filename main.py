@@ -1,8 +1,18 @@
 import youtube_dl
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 app = FastAPI()
+
+origins = ["*"] # 👈 add domains as an array to allow only specified domains to access api
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 
 def isAV(s):
     if str(s).lower() == 'none':
