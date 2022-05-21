@@ -1,7 +1,9 @@
 import youtube_dl
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import urllib
 
 app = FastAPI()
 
@@ -59,6 +61,17 @@ async def root(url: str = None):
         "error": False if realDeal else True
     }
     return data
+
+@app.get("/stream")
+async def stream(url: str = None):
+    
+  def getStream(url):
+     req = urllib.request.Request(url)
+     with urllib.request.urlopen(req) as resp:
+         yield from resp
+
+
+  return StreamingResponse(getStream(url), media_type="video/mp4")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=10111)
