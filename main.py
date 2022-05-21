@@ -1,12 +1,15 @@
-from django.http import JsonResponse
 import youtube_dl
+from fastapi import FastAPI
+import uvicorn
+
+app = FastAPI()
 
 def isAV(s):
     if str(s).lower() == 'none':
         return False
     else:
         return True
-
+        
 def getInfo(url):
 
     with youtube_dl.YoutubeDL() as ydl:
@@ -34,16 +37,18 @@ def getInfo(url):
 
         return result
 
-def index(request):
+
+@app.get("/")
+async def root(url: str = None):
     realDeal = None
-    url = request.GET.get("url")
-    if(url == ''):
-        status = "you haven't specified a url"
-    elif(url):
+    if url:
         realDeal = getInfo(url)
     data = {
         "data" : realDeal if realDeal else None,
         "status": "success" if realDeal else "check your url parameters",
         "error": False if realDeal else True
     }
-    return JsonResponse(data)
+    return data
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=10111)
