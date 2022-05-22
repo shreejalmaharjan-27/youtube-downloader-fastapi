@@ -20,5 +20,4 @@ For eg: `curl http://localhost:10111?url=https://www.youtube.com/watch?v=dQw4w9W
 
 ### Play signed YouTube videos (eg: from YouTube Music & so on.)
 Make request to `/stream` endpoint with `url` parameter with urlencoded googlevideo url and it will return video/audio stream
-
 For eg: `curl http://localhost:10111/stream?url=https%3A%2F%2Frr1---sn-cvh76ner.googlevideo.com%2Fvideoplayback%3Fexpire%3D1653153965%26ei%3DTcyIYu_BNMfKgAPMkIewBw%26ip%...`

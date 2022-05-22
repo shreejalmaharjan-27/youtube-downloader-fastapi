@@ -4,6 +4,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import urllib
+import re
 
 app = FastAPI()
 
@@ -49,7 +50,6 @@ def getInfo(url):
 
         return result
 
-
 @app.get("/")
 async def root(url: str = None):
     realDeal = None
@@ -64,14 +64,21 @@ async def root(url: str = None):
 
 @app.get("/stream")
 async def stream(url: str = None):
-    
-  def getStream(url):
-     req = urllib.request.Request(url)
-     with urllib.request.urlopen(req) as resp:
-         yield from resp
+    def getStream(url):
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req) as resp:
+            yield from resp
 
-
-  return StreamingResponse(getStream(url), media_type="video/mp4")
+    regex = r"^(http|https):\/\/r([a-zA-Z]|[0-9])+---sn-([a-zA-Z]|[0-9])+.googlevideo.com.*"
+    if(re.search(regex,url)):
+        return StreamingResponse(getStream(url), media_type="video/mp4")
+    else:
+        data = {
+            "data" : None,
+            "status": "invalid googlevideo url",
+            "error": True
+        }
+        return data
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=10111)
